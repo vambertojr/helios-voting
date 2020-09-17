@@ -1,0 +1,2 @@
+DROP DATABASE helios;
+CREATE DATABASE helios;

@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  ufape_postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "helios"
+    container_name: ufape_heliosdb
+    ports:
+      - "6001:5432"
+    volumes:
+      - ufape_heliosdb:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+#      - "/etc/timezone:/etc/timezone:ro"
+#      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - helios-network
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+
+  ufape_pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "sti@ufape.edu.br"
+      PGADMIN_DEFAULT_PASSWORD: "qwer@123"
+    container_name: ufape_pgadmin
+    ports:
+      - "6002:80"
+    depends_on:
+      - ufape_postgres
+    networks:
+      - helios-network
+    volumes:
+      - ufape_pgadmin:/var/lib/pgadmin
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+
+  ufape_helios:
+    build:
+      dockerfile: Dockerfile
+      context: ./helios/
+    #command: python manage.py celeryd
+    container_name: ufape_helios
+    environment:
+      - C_FORCE_ROOT=true
+    depends_on:
+      - ufape_postgres
+      - ufape_openldap
+    ports:
+      #- "8000:8000"
+      - "8000:80"
+    volumes:
+      - ufape_heliosapp:/app
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - helios-network
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+
+ 
+  ufape_openldap:
+    image: osixia/openldap:1.4.0
+    container_name: ufape_openldap
+    environment:
+      LDAP_LOG_LEVEL: "256"
+      LDAP_ORGANISATION: "Universidade Federal do Agreste de Pernambuco"
+      LDAP_DOMAIN: "ufape.edu.br"
+      LDAP_BASE_DN: "dc=ufape,dc=edu,dc=br"
+      LDAP_ADMIN_PASSWORD: "qwer@123"
+      LDAP_CONFIG_PASSWORD: "config"
+      LDAP_READONLY_USER: "true"
+      KEEP_EXISTING_CONFIG: "true"
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "qwer@123"
+      LDAP_BACKEND: "mdb"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ufape_ldap:/var/lib/ldap
+      - ufape_slapd:/etc/ldap/slapd.d
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - helios-network
+    ports:
+      - "6004:389"
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+      
+      
+  ufape_phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: ufape_phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "ufape_openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "6005:80"
+    depends_on:
+      - ufape_openldap
+    networks:
+      - helios-network
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+
+networks:
+  helios-network:
+    name: helios-network
+
+volumes:
+  ufape_heliosapp:
+    name: ufape_heliosapp
+  ufape_heliosdb:
+    name: ufape_heliosdb
+  ufape_pgadmin:
+    name: ufape_pgadmin
+  ufape_ldap:
+    name: ufape_ldap
+  ufape_slapd:
+    name: ufape_slapd
+  
+  

@@ -1,0 +1,43 @@
+#Claudia Cristiane Silva Pereira	claudiaufrpe2018@gmail.com
+#Islene Catão da Silva	catao.islene@gmail.com
+#Victor Netto Maia	victormaiavet@yahoo.com.br
+#Tania Alen Coutinho	tania_alen@hotmail.com
+#Marlon Esdras Jessé de Souza	marlon.souza@ufape.edu.br
+#Carol Soares Bezerra de Sá Peixoto	carols.peixoto@ufape.edu.br
+version: 1
+
+# Entry 3: ou=groups,dc=ufape,dc=edu,dc=br
+dn: ou=groups,dc=ufape,dc=edu,dc=br
+objectclass: organizationalUnit
+objectclass: top
+ou: groups
+
+# Entry 4: cn=heliosadmin,ou=groups,dc=ufape,dc=edu,dc=br
+dn: cn=heliosadmin,ou=groups,dc=ufape,dc=edu,dc=br
+cn: heliosadmin
+gidnumber: 500
+objectclass: posixGroup
+objectclass: top
+
+# Entry 5: ou=users,dc=ufape,dc=edu,dc=br
+dn: ou=users,dc=ufape,dc=edu,dc=br
+objectclass: organizationalUnit
+objectclass: top
+ou: users
+
+# Entry 1: cn=Vamberto Rocha,ou=users,dc=ufape,dc=edu,dc=br
+dn: cn=Vamberto Rocha,ou=users,dc=ufape,dc=edu,dc=br
+cn: Vamberto Rocha
+gidnumber: 500
+givenname: Vamberto
+homedirectory: /home/users/vrocha
+loginshell: /usr/sbin/nologin
+mail: vamberto@ufape.edu.br
+objectclass: inetOrgPerson
+objectclass: posixAccount
+objectclass: top
+sn: Rocha
+uid: vrocha
+uidnumber: 1000
+userpassword: {MD5}xjFhTHnR4Z4Os0qtUBDIfdsfdsfdsfdsfdbA==
+
