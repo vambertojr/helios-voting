@@ -15,7 +15,7 @@ cd /app/
 python manage.py migrate
 
 python manage.py compilemessages
-echo "from django.contrib.auth.models import User; User.objects.create_superuser('root', 'sti@ufape.edu.br', 'qwer@123')" | python manage.py shell --plain
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('change', 'sti@ufape.edu.br', 'change')" | python manage.py shell --plain
 screen -d -m python manage.py celeryd --detach
 #python manage.py runserver 0.0.0.0:8000
 
