@@ -1,9 +1,3 @@
-#Claudia Cristiane Silva Pereira	claudiaufrpe2018@gmail.com
-#Islene Catão da Silva	catao.islene@gmail.com
-#Victor Netto Maia	victormaiavet@yahoo.com.br
-#Tania Alen Coutinho	tania_alen@hotmail.com
-#Marlon Esdras Jessé de Souza	marlon.souza@ufape.edu.br
-#Carol Soares Bezerra de Sá Peixoto	carols.peixoto@ufape.edu.br
 version: 1
 
 # Entry 3: ou=groups,dc=ufape,dc=edu,dc=br
@@ -39,5 +33,5 @@ objectclass: top
 sn: Rocha
 uid: vrocha
 uidnumber: 1000
-userpassword: {MD5}xjFhTHnR4Z4Os0qtUBDIfdsfdsfdsfdsfdbA==
+userpassword: {MD5}change
 
